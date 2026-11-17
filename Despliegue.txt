@@ -1,0 +1,15 @@
+## Al hacer cambios en app.py, se debe crear de nuevo la imagen de la parte web
+## En Docker Hub ya existen las imagenes públicas que se llaman en biblioteca.yaml
+
+docker build -t biblioteca-web:1.2 ./web
+docker tag biblioteca-web:1.2 jeviermedinag/biblioteca-web:1.2
+docker push jeviermedinag/biblioteca-web:1.2
+kubectl apply -f ./k8s/biblioteca.yaml
+
+kubectl annotate deployment biblioteca-web kubernetes.io/change-cause="Letrero con la leyenda del grupo de arquitectura 5" -n practica
+
+kubectl -n practica port-forward svc/biblioteca-web 8080:8080 
+
+kubectl describe deployment biblioteca-web -n practica 
+
+kubectl rollout history deployment biblioteca-web 
